@@ -1,0 +1,33 @@
+{
+    "name": "@allegiant/static",
+    "version": "0.0.5",
+    "description": "Static files module for the allegiant app framework.",
+    "author": "echopoint <echopoint@tutanota.com>",
+    "contributors": [],
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/allegiant-js/static/issues"
+    },
+    "homepage": "https://github.com/allegiant-js/static#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/allegiant-js/static.git"
+    },
+    "main": "index.js",
+    "engine": {
+        "node": "> 7.6"
+    },
+    "scripts": {
+        "lint": "eslint .",
+        "test": "tap test/*.js",
+        "coverage": "tap test/*.js --coverage"
+    },
+    "dependencies": {
+        "@allegiant/common": "0.0.5"
+    },
+    "devDependencies": {
+        "eslint": "^4.12.1",
+        "jsdoc": "^3.5.5",
+        "tap": "^11.0.1"
+    }
+}
