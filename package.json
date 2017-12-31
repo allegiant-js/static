@@ -1,6 +1,6 @@
 {
     "name": "@allegiant/static",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "Static files module for the allegiant app framework.",
     "author": "echopoint <echopoint@tutanota.com>",
     "contributors": [],
@@ -23,7 +23,8 @@
         "coverage": "tap test/*.js --coverage"
     },
     "dependencies": {
-        "@allegiant/common": "0.0.5"
+        "@allegiant/common": "0.0.5",
+        "@allegiant/mime": "^0.2.3"
     },
     "devDependencies": {
         "eslint": "^4.12.1",
