@@ -3,17 +3,15 @@ const path = require('path');
 const { stat } = require('@allegiant/common');
 
 async function serveStatic(conn) {
-    var type;
-    
     if (!conn.writable) {
-        console.log("**** RESPONSE NOT WRITEABLE"); // eslint-disable-line
+        conn.status = 500;
+        conn.statusMessage = conn.getStatusMessage(500);
         return false;
     }
 
     //transform for static file in the webroot path    
     conn.uri = conn.uri + (conn.uri.slice(-1) == '/' ? 'index.html' : '');
     conn.fname = path.join(this.webRoot, conn.uri);
-    type = conn.mime.type(path.extname(conn.fname), 'utf8');
 
     conn.stat = await stat(conn.fname);
     if (conn.stat === false) {
@@ -28,16 +26,16 @@ async function serveStatic(conn) {
 
     if (conn.stat.isDirectory()) {
         console.log(conn.uri + " :: Directory Read Attempt: "); // eslint-disable-line
-        conn.writeHead(403, conn.getStatusMessage(403));
+        conn.writeHead(403, {}, conn.getStatusMessage(403));
 
         return false;
     }
 
+    conn.setHeader('Content-Type', conn.mime.type(path.extname(conn.fname), 'utf8'));
     if (cacheControl(conn))
         return false;
 
     conn.writeHead(200, {
-        'Content-Type': type,
         'Last-Modified': conn.stat.mtime.toUTCString(),
         'Content-Length': conn.stat.size
     });
@@ -60,7 +58,7 @@ function cacheControl(conn) {
     } else if (modifiedDate != null)  {
         modifiedDate = new Date(modifiedDate);
 
-        //diff check for time < 0 should be cached: hasn't been modified since the time requested
+        // diff check for time < 0 should be cached: hasn't been modified since the time requested
         var diff = modifiedDate.getTime() - conn.stat.mtime.getTime();
         if (diff <= 0) {
            conn.setHeader('Last-Modified', conn.stat.mtime.toUTCString());
