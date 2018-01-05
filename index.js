@@ -5,7 +5,6 @@ const { stat } = require('@allegiant/common');
 async function serveStatic(conn) {
     if (!conn.writable) {
         conn.status = 500;
-        conn.statusMessage = conn.getStatusMessage(500);
         return false;
     }
 
@@ -17,16 +16,13 @@ async function serveStatic(conn) {
     if (conn.stat === false) {
         console.log(conn.uri + " :: 404 Doesn't exist"); // eslint-disable-line
 
-        conn.writeHead(404, {
-            'Content-Type': conn.mime.type('.html', 'utf-8'),
-        }, conn.getStatusMessage(404));
-
+        conn.status = 404;
         return false;
     }
 
     if (conn.stat.isDirectory()) {
         console.log(conn.uri + " :: Directory Read Attempt: "); // eslint-disable-line
-        conn.writeHead(403, {}, conn.getStatusMessage(403));
+        conn.status = 403;
 
         return false;
     }
@@ -35,10 +31,9 @@ async function serveStatic(conn) {
     if (cacheControl(conn))
         return false;
 
-    conn.writeHead(200, {
-        'Last-Modified': conn.stat.mtime.toUTCString(),
-        'Content-Length': conn.stat.size
-    });
+    conn.status = 200;
+    conn.setHeader('Last-Modified', conn.stat.mtime.toUTCString());
+    conn.setHeader('Content-Length', conn.stat.size);
 
     return conn.streamReadable(fs.createReadStream(conn.fname));
 }

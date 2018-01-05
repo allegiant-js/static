@@ -1,6 +1,6 @@
 {
     "name": "@allegiant/static",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "description": "Static files module for the allegiant app framework.",
     "author": "echopoint <echopoint@tutanota.com>",
     "contributors": [],
